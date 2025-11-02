@@ -1,10 +1,10 @@
 """
-Django admin customization for core app.
+Django admin customization for app.
 """
 
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from core import models
+from app import models
 from django.utils.translation import gettext as _
 
 class UserAdmin(BaseUserAdmin):
