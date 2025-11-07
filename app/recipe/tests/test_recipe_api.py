@@ -56,7 +56,7 @@ class PrivateRecipeAPITest(TestCase):
 
     def test_retrieve_recipes(self):
         """Test retrieving a list of recipes"""
-        create_recipe(user=self.user) 
+        create_recipe(user=self.user)
         create_recipe(user=self.user)
 
         res = self.client.get(RECIPE_URLS)
@@ -80,7 +80,6 @@ class PrivateRecipeAPITest(TestCase):
         res = self.client.get(RECIPE_URLS)
 
         recipes = Recipe.objects.filter(user=self.user)
-
         serializer = RecipeSerializer(recipes, many=True)
-
         self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.data, serializer.data)
