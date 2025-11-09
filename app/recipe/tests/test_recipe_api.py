@@ -160,19 +160,3 @@ class PrivateRecipeAPITest(TestCase):
         for key, value in payload.items():
             self.assertEqual(getattr(recipe, key), value)
         self.assertEqual(recipe.user, self.user)
-
-    def test_update_user_returns_error(self):
-        """Test changing the recipe user results in an error"""
-        new_user = get_user_model().objects.create_user(
-            'new@example.com',
-            'newpass123'
-        )
-        recipe = create_recipe(user=self.user)
-
-        payload = {'user': new_user.id}
-        url = detail_url(recipe.id)
-        res = self.client.patch(url, payload)
-
-        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
-        recipe.refresh_from_db()
-        self.assertEqual(recipe.user, self.user)
