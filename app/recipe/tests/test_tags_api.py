@@ -12,6 +12,9 @@ from recipe.serializers import TagSerializer
 
 TAG_URL = reverse('recipe:tag-list')
 
+def detail_id(tag_id):
+    """Create and return a tag detail URL"""
+    return reverse('recipe:tag-detail', args=[tag_id])
 
 class PublicTagApiTest(TestCase):
     """Test unauthenticated API requests"""
@@ -34,12 +37,12 @@ class PrivateTagApiTest(TestCase):
             email='test@example.com',
             password='testpass123',
         )
-        self.client.force_authenticate(user=self.user)
+        self.client.force_authenticate(self.user)
 
     def test_retrieve_tags(self):
         """Test retrieving a list of tags"""
-        Tag.objects.create(user=self.user)
-        Tag.objects.create(user=self.user)
+        Tag.objects.create(user=self.user, name='Vegan' )
+        Tag.objects.create(user=self.user, name='Dessert' )
 
         res = self.client.get(TAG_URL)
 
@@ -53,8 +56,8 @@ class PrivateTagApiTest(TestCase):
     def test_tag_list_limited_to_user(self):
         """Test list of tags is limited to authenticated user"""
         other_user = get_user_model().objects.create_user(
-            'other@example.com',
-            'otherpass123'
+            email='other@example.com',
+            password='otherpass123'
         )
         Tag.objects.create(user=other_user, name='Fruity')
         tag = Tag.objects.create(user=self.user, name='Comfort Food')
@@ -66,4 +69,25 @@ class PrivateTagApiTest(TestCase):
         self.assertEqual(res.data[0]['name'], tag.name)
         self.assertEqual(res.data[0]['id'], tag.id)
 
-    
+    def test_update_tag(self):
+        """Test updating a tag"""
+        tag = Tag.objects.create(user=self.user, name='After Dinner')
+
+        payload = {'name': 'Dessert'}
+        url = detail_id(tag.id)
+        res = self.client.patch(url, payload)
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        tag.refresh_from_db()
+        self.assertEqual(tag.name, payload['name'])
+
+    def test_delete_tag(self):
+        """Test deleting a tag"""
+        tag = Tag.objects.create(user=self.user, name='Breakfast')
+
+        url = detail_id(tag.id)
+        res = self.client.delete(url)
+
+        self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
+        tags = Tag.objects.filter(id=tag.id)
+        self.assertFalse(tags.exists())
