@@ -7,7 +7,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 from recipe.serializers import RecipeSerializer, RecipeDetailSerializer, TagSerializer, IngredientSerializer
-from app.models import Recipe, Tag,Ingredient
+from app.models import Recipe, Tag, Ingredient
 
 class RecipeViewSet(viewsets.ModelViewSet):
     """View for manage Recipe APIs"""
