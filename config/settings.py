@@ -1,11 +1,24 @@
-from pathlib import Path
 import os
+from pathlib import Path
+from dotenv import load_dotenv
+import dj_database_url
+
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-$%223mmwvs9e12tk_y&_*69phxkexp1lc_l!!@&y0-&@%8(l!&'
-DEBUG = True
-ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1']
+BLOB_READ_WRITE_TOKEN = os.environ.get('BLOB_READ_WRITE_TOKEN')
+
+SECRET_KEY = os.getenv("SECRET_KEY", "changeme")
+DEBUG = os.getenv("DEBUG", "False") == "True"
+ALLOWED_HOSTS = [
+    '.vercel.app',
+    '.now.sh',
+    'localhost',
+    '127.0.0.1',
+    '0.0.0.0',
+    '[::1]',
+]
 
 
 DEFAULT_APPS = [
@@ -73,14 +86,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'HOST': os.environ.get('DB_HOST'),
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASS'),
-    }
+    "default": dj_database_url.parse(os.getenv("DATABASE_URL", ""), conn_max_age=600)
 }
+
+STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -108,9 +119,7 @@ USE_L10N = True
 USE_TZ = True
 
 
-STATIC_URL = '/static/static/'
 MEDIA_URL = '/static/media/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
