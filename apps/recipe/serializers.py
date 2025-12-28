@@ -26,7 +26,7 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Recipe
-        fields = ['title', 'id', 'time_minutes', 'price', 'link', 'tags', 'ingredients']
+        fields = ['title', 'id', 'time_minutes', 'price', 'link', 'tags', 'ingredients', 'image']
         read_only_fields = ['id']
 
     def _get_or_create_tags(self, recipe, tags_data):
