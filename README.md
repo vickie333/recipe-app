@@ -75,4 +75,4 @@ docker-compose run --rm app sh -c "python manage.py test"
 
 ## 👤 Author
 
-Developed by [Your Name/Organization]
+Developed by Maria Victoria Perez Contrera
