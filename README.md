@@ -46,7 +46,7 @@ This project uses Docker for easy setup and execution.
 
 2.  **Build and run the project:**
     ```bash
-    docker-compose up --build
+    docker compose up --build
     ```
 
     This command will:
@@ -70,7 +70,7 @@ The API documentation is automatically generated using `drf-spectacular`.
 To run the test suite inside the Docker container:
 
 ```bash
-docker-compose run --rm app sh -c "python manage.py test"
+docker compose run --rm app sh -c "python manage.py test"
 ```
 
 ## 👤 Author
